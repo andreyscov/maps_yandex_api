@@ -22,11 +22,11 @@ function init()
     for (i=0; i<mkad_coords[0].length; i++)
         arPlacemarks[i] = new ymaps.Placemark(mkad_coords[0][i]);
 
-        //к сожалению для корректного поиска ближайшей точки их все надо добавить
-        //но мы их не будем отображать конечно же
+        // Для корректного поиска ближайшей точки их все надо добавить на карту
+        // Но мы их не будем отображать
         var arPlacemarksRez = ymaps.geoQuery(arPlacemarks).addToMap(myMap).setOptions('visible', false);
 
-        //вместо этого нарисуем полигон мкада. для красоты. он для расчётов нам не нужен
+        // Вместо этого нарисуем полигон мкада. для красоты. он для расчётов нам не нужен
         var mkad_polygon = new ymaps.Polygon(mkad_coords, {
           fillColor: '#a4bff5',
           // Делаем полигон прозрачным для событий карты.
@@ -38,16 +38,15 @@ function init()
 
         var needed_point, obj_collection;
 
-	      var addRoute = function (coords, mkad_polygon) {
+	var addRoute = function (coords, mkad_polygon) {
           needed_point = new ymaps.Placemark(coords);
           obj_collection = ymaps.geoQuery(needed_point).addToMap(myMap);
 
-
-    		  // Находим ближайшую точку мкада
+	  // Находим ближайшую точку мкада
           var closestObject = arPlacemarksRez.getClosestTo(coords);
 
 
-    	    // Составляем маршрут между двумя точками
+    	  // Составляем маршрут между двумя точками
           ymaps.route([
                 closestObject.geometry.getCoordinates(),
                 coords
@@ -60,9 +59,7 @@ function init()
                zoomMargin: 30
           }).then(function (route) {
 
-
             myMap.geoObjects.add(route.getPaths());
-
 
             // Пишем дистанцию на метке
             var distance = Math.round(route.getLength()/1000);
@@ -77,25 +74,25 @@ function init()
       		function (res) {
       			var coords = res.geoObjects.get(0).geometry.getCoordinates();
 
-            if(mkad_polygon.geometry.contains(coords)) {
+           		if(mkad_polygon.geometry.contains(coords)) {
               
-              alert('Внутри МКАД!');
+              			alert('Внутри МКАД!');
 
-              placemark = new ymaps.Placemark(coords, {
-                  balloonContent: '',
-                  iconContent: '',
-              },
-              {
-                  preset: "islands#yellowStretchyIcon",
-              });
+			      placemark = new ymaps.Placemark(coords, {
+				  balloonContent: '',
+				  iconContent: '',
+			      },
+			      {
+				  preset: "islands#yellowStretchyIcon",
+			      });
 
-              myMap.geoObjects.add(placemark);
-            }
-            else {
-              alert('Точка находится за МКАД!');
-              // Строим маршрут
-              addRoute(coords, <?=$co2?>);
-            }
+              			myMap.geoObjects.add(placemark);
+           		}
+		      else {
+		      	alert('Точка находится за МКАД!');
+		      	// Строим маршрут
+		      	addRoute(coords, <?=$co2?>);
+		      }
       		},
       		function (err) {
       			alert('Ошибка. Адрес не определен');
