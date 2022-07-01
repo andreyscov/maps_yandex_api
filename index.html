@@ -77,14 +77,15 @@ function init()
            		if(mkad_polygon.geometry.contains(coords)) {
               
               			alert('Внутри МКАД!');
-
-			      placemark = new ymaps.Placemark(coords, {
+				
+				// Просто выводим метку в полигоне
+			      	placemark = new ymaps.Placemark(coords, {
 				  balloonContent: '',
 				  iconContent: '',
-			      },
-			      {
+			      	},
+			      	{
 				  preset: "islands#yellowStretchyIcon",
-			      });
+			      	});
 
               			myMap.geoObjects.add(placemark);
            		}
